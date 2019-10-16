@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LocationScreen extends StatefulWidget {
+  final Map weatherData;
+  LocationScreen({this.weatherData});
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
@@ -8,6 +10,12 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   @override
   Widget build(BuildContext context) {
+    Map weatherMap = widget.weatherData;
+//    double.toStringAsFixed(3)
+    double maxTempK = weatherMap['main']['temp_max'];
+    double maxTempC = maxTempK - 273;
+    String maxTempS = maxTempC.toStringAsFixed(0);
+    String cityName = weatherMap['name'];
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -50,7 +58,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '32°',
+                      "$maxTempS°",
                       style: TextStyle(
                         fontFamily: 'Spartan MB',
                         fontSize: 100.0,
@@ -68,9 +76,9 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's 🍦 time in Mumbai!",
+                  "It's 🍦 time in $cityName",
                   textAlign: TextAlign.right,
-                  style:  TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Spartan MB',
                     fontSize: 60.0,
                   ),
