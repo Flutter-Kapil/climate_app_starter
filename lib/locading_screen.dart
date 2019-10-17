@@ -5,6 +5,9 @@ import 'location.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
+  final String userCityName;
+  final String myAPIkey = 'your api key here';
+  LoadingScreen([this.userCityName]);
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -21,14 +24,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void getCurrentLocation() async {
     await myLocation.geLocation();
-//    print(myLocation.latitude);
-//    print(myLocation.longitude);
     fetchWeatherData();
   }
 
   void fetchWeatherData() async {
-    NetworkHelper helper = NetworkHelper(
-        'https://api.openweathermap.org/data/2.5/weather?lat=${myLocation.latitude}&lon=${myLocation.longitude}&appid=48a5927d387a65d7315fbc637b228ef7');
+    NetworkHelper helper;
+    if (widget.userCityName == '') {
+      helper = NetworkHelper(
+          'https://api.openweathermap.org/data/2.5/weather?lat=${myLocation.latitude}&lon=${myLocation.longitude}&appid=${widget.myAPIkey}');
+    } else {
+      helper = NetworkHelper(
+          'https://api.openweathermap.org/data/2.5/weather?q=${widget.userCityName}&appid=${widget.myAPIkey}');
+    }
 
     Map weatherDataMap = await helper.fetchWeatherInfo();
     Navigator.pushReplacement(
