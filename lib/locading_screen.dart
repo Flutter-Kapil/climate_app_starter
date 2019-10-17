@@ -1,12 +1,14 @@
 import 'package:clima/network_helper.dart';
 import 'package:clima/weatherDisplay_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'location.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'getLocation_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String userCityName;
-  final String myAPIkey = 'your api key here';
+  final String myAPIkey = 'Your API here';
   LoadingScreen([this.userCityName]);
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
@@ -23,8 +25,33 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void getCurrentLocation() async {
-    await myLocation.geLocation();
-    fetchWeatherData();
+    try {
+      await myLocation.geLocation();
+      fetchWeatherData();
+    } catch (e) {
+      Alert(
+        style: AlertStyle(
+          isOverlayTapDismiss: false,
+          isCloseButton: false,
+          backgroundColor: Colors.white30,
+        ),
+        context: context,
+        type: AlertType.error,
+        title: "Location Permission Denied",
+        desc: "Please Grant Location Permission to app",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Go Back",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop((context),
+                MaterialPageRoute(builder: (context) => CityScreen())),
+            width: 120,
+          )
+        ],
+      ).show();
+    }
   }
 
   void fetchWeatherData() async {
@@ -49,10 +76,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     print("build state called");
-    return Center(
-      child: SpinKitRotatingCircle(
-        color: Colors.white,
-        size: 50.0,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('images/city_background.jpg'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      constraints: BoxConstraints.expand(),
+      child: Center(
+        child: SpinKitRotatingCircle(
+          color: Colors.white,
+          size: 50.0,
+        ),
       ),
     );
   }
