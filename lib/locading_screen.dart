@@ -31,7 +31,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         'https://api.openweathermap.org/data/2.5/weather?lat=${myLocation.latitude}&lon=${myLocation.longitude}&appid=48a5927d387a65d7315fbc637b228ef7');
 
     Map weatherDataMap = await helper.fetchWeatherInfo();
-    Navigator.push(
+    Navigator.pushReplacement(
         (context),
         MaterialPageRoute(
             builder: (context) => LocationScreen(
